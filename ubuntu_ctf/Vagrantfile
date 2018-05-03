@@ -1,0 +1,72 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+	config.vm.box = "ubuntu/xenial64"
+	# config.vm.synced_folder "../", "/ctf"
+	config.vm.provision :shell, :privileged => false, inline: <<-SHELL
+		# update
+		sudo dpkg --add-architecture i386
+		sudo apt-get -y update
+		sudo apt-get -y upgrade
+		
+		# deps
+		sudo apt-get -y install git build-essential
+		sudo apt-get -y install unzip socat binwalk exiftool imagemagick
+		sudo apt-get -y install python2.7 python-pip
+		sudo apt-get -y install python-dev libssl-dev libffi-dev libpcap-dev libncurses-dev libgmp3-dev
+		sudo apt-get -y install libc6:i386 libncurses5:i386 libstdc++6:i386
+		sudo apt-get -y install gdb gdb-multiarch
+		
+		# nodejs
+		curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+		sudo apt-get -y install nodejs
+
+
+		# create dir
+		mkdir -p ~/tools
+		
+		# radare2
+		git clone https://github.com/radare/radare2 ~/tools/radare2
+		cd ~/tools/radare2
+		./sys/install.sh
+		echo "radare2 installed"
+		cd ~
+		sudo pip install r2pipe
+
+		# gdb peda
+		git clone https://github.com/longld/peda.git ~/tools/peda
+		echo "source ~/tools/peda/peda.py" >> ~/.gdbinit
+		echo "DONE! debug your program with gdb and enjoy"
+		
+		# pwntools
+		sudo pip install --upgrade pip
+		sudo pip install --upgrade pwntools
+		echo "pwntools installed"
+
+		# ipython
+		sudo pip install ipython
+		echo "ipython installed"
+
+		# masscan
+		git clone https://github.com/robertdavidgraham/masscan ~/tools/masscan
+		cd ~/tools/masscan
+		make -j
+		sudo cp bin/masscan /usr/local/bin
+		cd ~
+
+		# featherduster
+		git clone https://github.com/nccgroup/featherduster.git ~/tools/featherduster
+		cd ~/tools/featherduster
+		sudo pip install .
+		cd ~
+		
+
+
+
+
+	SHELL
+	config.vm.provider "virtualbox" do |vb|
+		vb.customize ["modifyvm", :id, "--memory", "1024"]
+	end
+end
