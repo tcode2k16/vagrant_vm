@@ -25,19 +25,25 @@ Shutdown the vm
 ## Tools included
 
 * x86 binary libs
-* gdb with peda
+* gdb with gef
 * binwalk
 * exiftool
 * imagemagick
+* nmap
 * socat
 * unzip
 * python2
-* nodejs
-* radare2
+* ruby
+* radare2 with r2dec
+* libc-database
 * pwntools
+* one_gadget
+* angr
+* frida
 * ipython
 * masscan
 * featherduster
+* sqlmap
 
 ## Suggestions
 

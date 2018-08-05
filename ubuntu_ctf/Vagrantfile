@@ -2,8 +2,8 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-	config.vm.box = "ubuntu/xenial64"
-	# config.vm.synced_folder "../", "/ctf"
+	config.vm.box = "ubuntu/bionic64"
+	# config.vm.synced_folder "~/Documents/ctf/2018", "/ctf"
 	config.vm.provision :shell, :privileged => false, inline: <<-SHELL
 		# update
 		sudo dpkg --add-architecture i386
@@ -12,16 +12,17 @@ Vagrant.configure("2") do |config|
 		
 		# deps
 		sudo apt-get -y install git build-essential
-		sudo apt-get -y install unzip socat binwalk exiftool imagemagick
+		sudo apt-get -y install g++-multilib
+		sudo apt-get -y install unzip socat binwalk exiftool imagemagick nmap
 		sudo apt-get -y install python2.7 python-pip
-		sudo apt-get -y install python-dev libssl-dev libffi-dev libpcap-dev libncurses-dev libgmp3-dev
+		sudo apt-get -y install ruby-full
+		sudo apt-get -y install python-dev libssl-dev libffi-dev libpcap-dev libncurses-dev libgmp3-dev virtualenvwrapper pkg-config
 		sudo apt-get -y install libc6:i386 libncurses5:i386 libstdc++6:i386
 		sudo apt-get -y install gdb gdb-multiarch
 		
 		# nodejs
-		curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-		sudo apt-get -y install nodejs
-
+		# curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+		# sudo apt-get -y install nodejs
 
 		# create dir
 		mkdir -p ~/tools
@@ -34,15 +35,38 @@ Vagrant.configure("2") do |config|
 		cd ~
 		sudo pip install r2pipe
 
+		# r2dec
+		r2pm init
+		r2pm install r2dec
+
+		# libc-database
+		git clone https://github.com/niklasb/libc-database.git ~/tools/libc-database
+		cd ~/tools/libc-database
+		./add /lib/i386-linux-gnu/libc.so.6
+		./add /lib/x86_64-linux-gnu/libc.so.6
+		cd ~
+
 		# gdb peda
-		git clone https://github.com/longld/peda.git ~/tools/peda
-		echo "source ~/tools/peda/peda.py" >> ~/.gdbinit
-		echo "DONE! debug your program with gdb and enjoy"
+		# git clone https://github.com/longld/peda.git ~/tools/peda
+		# echo "source ~/tools/peda/peda.py" >> ~/.gdbinit
+		# echo "DONE! debug your program with gdb and enjoy"
+
+		# gef
+		wget -q -O- https://github.com/hugsy/gef/raw/master/scripts/gef.sh | sh
 		
 		# pwntools
 		sudo pip install --upgrade pip
 		sudo pip install --upgrade pwntools
 		echo "pwntools installed"
+
+		# one_gadget
+		sudo gem install one_gadget
+
+		# angr
+		sudo pip install angr
+
+		# frida
+		sudo pip install frida-tools
 
 		# ipython
 		sudo pip install ipython
@@ -60,9 +84,19 @@ Vagrant.configure("2") do |config|
 		cd ~/tools/featherduster
 		sudo pip install .
 		cd ~
-		
+
+		# sqlmap
+		git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git ~/tools/sqlmap-dev
 
 
+		# z3 (included in angr)
+		# git clone https://github.com/Z3Prover/z3.git ~/tools/z3
+		# cd ~/tools/z3
+		# python scripts/mk_make.py --python
+		# cd build
+		# make
+		# make install
+		# cd ~
 
 
 	SHELL
