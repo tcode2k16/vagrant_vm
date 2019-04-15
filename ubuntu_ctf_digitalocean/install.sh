@@ -138,6 +138,8 @@ yes | ~/tools/fzf/install
 # prompt
 echo "export PS1='\[\e[36m\]\w\[\e[m\] \[\e[33m\]\\$\[\e[m\] '" >> ~/.bashrc
 
+echo "alias ga=\"gdb --pid=\\\$(pgrep -P \\\`pgrep \\\"python\\\"\\\`)\"" >> ~/.bashrc
+
 # arm
 # sudo apt-get -y install qemu qemu-user qemu-user-static
 # sudo apt-get -y install 'binfmt*'
