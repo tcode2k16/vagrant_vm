@@ -8,7 +8,7 @@ sudo apt-get -y upgrade
 # deps
 sudo apt-get -y install git build-essential
 sudo apt-get -y install g++-multilib
-sudo apt-get -y install unzip socat binwalk exiftool imagemagick nmap pngcheck foremost valgrind steghide tree
+sudo apt-get -y install unzip socat binwalk exiftool imagemagick nmap pngcheck foremost valgrind steghide tree upx
 sudo apt-get -y install python2.7 python-pip
 sudo apt-get -y install ruby-full
 sudo apt-get -y install python-dev libssl-dev libffi-dev libpcap-dev libncurses-dev libgmp3-dev virtualenvwrapper pkg-config
@@ -56,6 +56,9 @@ echo "pwntools installed"
 
 # one_gadget
 sudo gem install one_gadget
+
+# seccomp-tools
+sudo gem install seccomp-tools
 
 # zsteg
 sudo gem install zsteg
